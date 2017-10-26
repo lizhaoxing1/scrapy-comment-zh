@@ -146,6 +146,7 @@ def execute(argv=None, settings=None):
         sys.exit(2)
 
     cmd = cmds[cmdname]
+    # 这里定义了 命令行使用时候的用法
     parser.usage = "scrapy %s %s" % (cmdname, cmd.syntax())
     parser.description = cmd.long_desc()
     settings.setdict(cmd.default_settings, priority='command')
@@ -153,7 +154,9 @@ def execute(argv=None, settings=None):
     cmd.add_options(parser)
     opts, args = parser.parse_args(args=argv[1:])
     _run_print_help(parser, cmd.process_options, args, opts)
+    # ---------------------
 
+    #初始化CrawlerProcess
     cmd.crawler_process = CrawlerProcess(settings)
     _run_print_help(parser, _run_command, cmd, args, opts)
     sys.exit(cmd.exitcode)
