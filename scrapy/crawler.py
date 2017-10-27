@@ -244,7 +244,7 @@ class CrawlerProcess(CrawlerRunner):
 
     def __init__(self, settings=None):
         super(CrawlerProcess, self).__init__(settings)
-        install_shutdown_handlers(self._signal_shutdown)
+        install_shutdown_handlers(self._signal_shutdown) #这里定义怎么shutdown 程序
         configure_logging(self.settings)
         log_scrapy_info(self.settings)
 
@@ -318,6 +318,7 @@ def _get_spider_loader(settings):
             'Please use SPIDER_LOADER_CLASS.',
             category=ScrapyDeprecationWarning, stacklevel=2
         )
+    # 这里设置cls_path 变量是获取settings里的 SPIDER_MANAGER_CLASS, 如果没有此选项使用SPIDER_LOADER_CLASS值
     cls_path = settings.get('SPIDER_MANAGER_CLASS',
                             settings.get('SPIDER_LOADER_CLASS'))
     loader_cls = load_object(cls_path)
