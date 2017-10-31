@@ -32,7 +32,7 @@ class Crawler(object):
 
         self.spidercls = spidercls
         self.settings = settings.copy()
-        self.spidercls.update_settings(self.settings)
+        self.spidercls.update_settings(self.settings) #update_settings 是在 scrapy.spiders moudle de Spider 类中
 
         d = dict(overridden_settings(self.settings))
         logger.info("Overridden settings: %(settings)r", {'settings': d})
@@ -167,7 +167,7 @@ class CrawlerRunner(object):
 
         :param dict kwargs: keyword arguments to initialize the spider
         """
-        crawler = self.create_crawler(crawler_or_spidercls)
+        crawler = self.create_crawler(crawler_or_spidercls) #返回了一个Crawler类
         return self._crawl(crawler, *args, **kwargs)
 
     def _crawl(self, crawler, *args, **kwargs):
@@ -193,13 +193,14 @@ class CrawlerRunner(object):
           a spider with this name in a Scrapy project (using spider loader),
           then creates a Crawler instance for it.
         """
-        if isinstance(crawler_or_spidercls, Crawler):
+        if isinstance(crawler_or_spidercls, Crawler): # "meizitu" is a string, so it will go through _create_crawler
             return crawler_or_spidercls
         return self._create_crawler(crawler_or_spidercls)
 
     def _create_crawler(self, spidercls):
         if isinstance(spidercls, six.string_types):
-            spidercls = self.spider_loader.load(spidercls)
+            spidercls = self.spider_loader.load(spidercls) # 上面定义了self.spider_loader.从spider_loader中将load自己编写的spider.py中的类
+                                                           # 这块返回了自己编写的 CrawlSpider子类. name叫"meizitu"
         return Crawler(spidercls, self.settings)
 
     def stop(self):

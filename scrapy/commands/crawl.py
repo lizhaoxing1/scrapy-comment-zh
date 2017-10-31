@@ -52,7 +52,7 @@ class Command(ScrapyCommand):
             raise UsageError()
         elif len(args) > 1:
             raise UsageError("running 'scrapy crawl' with more than one spider is no longer supported")
-        spname = args[0]
+        spname = args[0] # 这里传的是"meizitu"
 
-        self.crawler_process.crawl(spname, **opts.spargs)
+        self.crawler_process.crawl(spname, **opts.spargs) # 现在传进来的spname值只是一个string,并不是任何类的实例
         self.crawler_process.start()

@@ -91,6 +91,7 @@ def _print_unknown_command(settings, cmdname, inproject):
     print("Unknown command: %s\n" % cmdname)
     print('Use "scrapy" to see available commands')
 
+# 这个作用是先运行函数,  如果函数运行失败就打印帮助信息.
 def _run_print_help(parser, func, *a, **kw):
     try:
         func(*a, **kw)
@@ -156,16 +157,17 @@ def execute(argv=None, settings=None):
     _run_print_help(parser, cmd.process_options, args, opts)
     # ---------------------
 
-    #初始化CrawlerProcess
+    # 初始化CrawlerProcess
+    # cmd 现在是个ScrapyCommand类, ScrapyCommand类中都有两个变量crawler_process, requires_project.
     cmd.crawler_process = CrawlerProcess(settings)
-    _run_print_help(parser, _run_command, cmd, args, opts)
+    _run_print_help(parser, _run_command, cmd, args, opts) # 这里相当于CrawlerProcess入口了.
     sys.exit(cmd.exitcode)
 
 def _run_command(cmd, args, opts):
     if opts.profile:
         _run_command_profiled(cmd, args, opts)
     else:
-        cmd.run(args, opts)
+        cmd.run(args, opts) #在 scrapy.command.crawl 包中 run 函数
 
 def _run_command_profiled(cmd, args, opts):
     if opts.profile:
