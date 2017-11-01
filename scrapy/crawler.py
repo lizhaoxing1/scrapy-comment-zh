@@ -25,7 +25,9 @@ logger = logging.getLogger(__name__)
 
 
 class Crawler(object):
-
+    """ 这个类 我理解为, 连接起自己写的爬虫. 和scrapy 的桥梁.类里面有一个self.spider(自己写的爬取规则)
+        self.engine(scrapy爬取引擎,引擎是如何去下载url 保存东西到本地等等, 处理爬取过程)
+    """
     def __init__(self, spidercls, settings=None):
         if isinstance(settings, dict) or settings is None:
             settings = Settings(settings)
@@ -72,12 +74,13 @@ class Crawler(object):
 
     @defer.inlineCallbacks
     def crawl(self, *args, **kwargs):
+        # 这个函数里将要开始正式将进入engine,开始正式爬取信息了.
         assert not self.crawling, "Crawling already taking place"
         self.crawling = True
 
         try:
-            self.spider = self._create_spider(*args, **kwargs)
-            self.engine = self._create_engine()
+            self.spider = self._create_spider(*args, **kwargs) # 定义好了自己写的spider
+            self.engine = self._create_engine() # 定义好了要用的engine
             start_requests = iter(self.spider.start_requests())
             yield self.engine.open_spider(self.spider, start_requests)
             yield defer.maybeDeferred(self.engine.start)
@@ -172,7 +175,7 @@ class CrawlerRunner(object):
 
     def _crawl(self, crawler, *args, **kwargs):
         self.crawlers.add(crawler)
-        d = crawler.crawl(*args, **kwargs)
+        d = crawler.crawl(*args, **kwargs) # 创建Cralwer实例，然后调用它的crawl方法
         self._active.add(d)
 
         def _done(result):
