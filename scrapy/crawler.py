@@ -81,7 +81,7 @@ class Crawler(object):
         try:
             self.spider = self._create_spider(*args, **kwargs) # 定义好了自己写的spider
             self.engine = self._create_engine() # 定义好了要用的engine
-            start_requests = iter(self.spider.start_requests())
+            start_requests = iter(self.spider.start_requests()) # 自己编写的spider中有的一个属性
             yield self.engine.open_spider(self.spider, start_requests)
             yield defer.maybeDeferred(self.engine.start)
         except Exception:
