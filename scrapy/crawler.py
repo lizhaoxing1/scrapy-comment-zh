@@ -82,7 +82,7 @@ class Crawler(object):
             self.spider = self._create_spider(*args, **kwargs) # 定义好了自己写的spider
             self.engine = self._create_engine() # 定义好了要用的engine
             start_requests = iter(self.spider.start_requests()) # 自己编写的spider中有的一个属性,可以是多个链接
-            yield self.engine.open_spider(self.spider, start_requests) #返回了一个迭代器
+            yield self.engine.open_spider(self.spider, start_requests) #,
             yield defer.maybeDeferred(self.engine.start)
         except Exception:
             # In Python 2 reraising an exception after yield discards
@@ -105,7 +105,7 @@ class Crawler(object):
         return self.spidercls.from_crawler(self, *args, **kwargs)
 
     def _create_engine(self):
-        return ExecutionEngine(self, lambda _: self.stop())
+        return ExecutionEngine(self, lambda _: self.stop()) #引擎
 
     @defer.inlineCallbacks
     def stop(self):
