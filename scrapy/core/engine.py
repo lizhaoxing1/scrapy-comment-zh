@@ -55,6 +55,7 @@ class Slot(object):
 
 class ExecutionEngine(object):
 
+    # __init__ 对爬虫的核心组件进行了初始化.
     def __init__(self, crawler, spider_closed_callback):
         self.crawler = crawler
         self.settings = crawler.settings
@@ -251,12 +252,13 @@ class ExecutionEngine(object):
 
     @defer.inlineCallbacks
     def open_spider(self, spider, start_requests=(), close_if_idle=True):
+        # 函数 实例了调度器, 如何爬取,爬取过滤方法等等.
         assert self.has_capacity(), "No free spider slot when opening %r" % \
             spider.name
         logger.info("Spider opened", extra={'spider': spider})
-        nextcall = CallLaterOnce(self._next_request, spider)
-        scheduler = self.scheduler_cls.from_crawler(self.crawler)
-        start_requests = yield self.scraper.spidermw.process_start_requests(start_requests, spider)
+        nextcall = CallLaterOnce(self._next_request, spider) # 这是给异步 的循环调用用的东西.
+        scheduler = self.scheduler_cls.from_crawler(self.crawler) # 调度器的实例化
+        start_requests = yield self.scraper.spidermw.process_start_requests(start_requests, spider) # 这里调用spdiermw 会读取你配置文件中中间件并处理
         slot = Slot(start_requests, close_if_idle, nextcall, scheduler)
         self.slot = slot
         self.spider = spider

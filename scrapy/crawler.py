@@ -82,8 +82,9 @@ class Crawler(object):
             self.spider = self._create_spider(*args, **kwargs) # 定义好了自己写的spider
             self.engine = self._create_engine() # 定义好了要用的engine
             start_requests = iter(self.spider.start_requests()) # 自己编写的spider中有的一个属性,可以是多个链接
+            # 从这个 yield 开始开始了异步处理的过程,暂时搁置异步处理.
             yield self.engine.open_spider(self.spider, start_requests) #迭代器,现将自己写的爬虫"放"到引擎中
-            yield defer.maybeDeferred(self.engine.start)
+            yield defer.maybeDeferred(self.engine.start)  # 这里调用了engine 的start方法,之后的调度就交给引擎了.
         except Exception:
             # In Python 2 reraising an exception after yield discards
             # the original traceback (see http://bugs.python.org/issue7563),

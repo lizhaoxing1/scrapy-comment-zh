@@ -20,6 +20,7 @@ def listen_tcp(portrange, host, factory):
 class CallLaterOnce(object):
     """Schedule a function to be called in the next reactor loop, but only if
     it hasn't been already scheduled since the last time it ran.
+        这里传进来了一个方法,和调用这个方法所需的变量. 在调用了schedule以后.
     """
 
     def __init__(self, func, *a, **kw):
@@ -29,6 +30,9 @@ class CallLaterOnce(object):
         self._call = None
 
     def schedule(self, delay=0):
+        """ 相当于异步的心脏. 只要调用了schedule方法,就会异步的一直执行下去,直到程序退出.
+            
+        """
         if self._call is None:
             self._call = reactor.callLater(delay, self)
 
